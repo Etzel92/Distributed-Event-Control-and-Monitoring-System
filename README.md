@@ -248,8 +248,5 @@ Make sure:
 
 ## Notes
 
-- This project is best understood as a distributed systems sample that combines backend, desktop, and web communication.
 - SignalR is the core mechanism used for real-time interaction between components.
 - SQL Server provides the persistence layer for event traceability.
-- The solution is strongest as a portfolio project when all three components are presented together.
-- Before publishing the repository, remove unnecessary local folders such as `.vs`, `bin`, and `obj` if they are present.
