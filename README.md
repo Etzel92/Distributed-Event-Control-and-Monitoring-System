@@ -1,92 +1,255 @@
-# EventControlSystem
+# Distributed Event Control and Monitoring System
 
-**EventControlSystem** es una solución distribuida que permite la gestión y monitoreo de eventos en tiempo real entre una interfaz web administrativa y múltiples aplicaciones cliente de escritorio. El sistema consta de tres componentes principales:
+A distributed real-time event control and monitoring system with a .NET API, WinForms client, React dashboard, SignalR messaging, and centralized event logging.
 
-- **EventControl.UI**: Frontend en React para el control remoto y monitoreo de eventos.
-- **EventControl.API**: Backend ASP.NET Core con endpoints REST y Hub SignalR para comunicación en tiempo real.
-- **EventClient.App**: Aplicación de escritorio en Windows Forms que responde a comandos remotos y registra eventos en base de datos.
+This solution connects a web-based administrative interface with multiple desktop clients, allowing remote command execution, real-time communication, and centralized event tracking across the system.
+
+> **Repository scope**: real-time command dispatching, event logging, centralized monitoring, REST API endpoints, SignalR-based communication, desktop client actions, and web-based event visualization.
 
 ---
 
-## 🧩 Arquitectura del sistema
+## Contents
 
-EventControlSystem implementa una arquitectura de tres capas:
+- [Overview](#overview)
+- [System Architecture](#system-architecture)
+- [Components](#components)
+- [Key Features](#key-features)
+- [Tech Stack](#tech-stack)
+- [Typical Workflow](#typical-workflow)
+- [Requirements](#requirements)
+- [Configuration](#configuration)
+- [How to Run](#how-to-run)
+- [Common Use Cases](#common-use-cases)
+- [Notes](#notes)
 
+---
+
+## Overview
+
+**Distributed Event Control and Monitoring System** is a multi-component solution designed to control and monitor client-side activity in real time.
+
+The system is composed of three main parts:
+
+- a **React web interface** for administration and monitoring
+- an **ASP.NET Core API** with REST endpoints and a SignalR hub
+- a **Windows Forms client application** that receives remote commands and logs activity
+
+The goal of the system is to provide centralized control over multiple desktop clients while keeping a traceable event log in a SQL Server database.
+
+---
+
+## System Architecture
+
+The solution follows a distributed three-part architecture:
+
+```text
+[React Admin UI] ⇄ [ASP.NET Core API + SignalR Hub] ⇄ [WinForms Client]
 ```
-[EventControl.UI] ⇄ [EventControl.API + SignalR Hub] ⇄ [EventClient.App]
+
+### High-level flow
+
+- The administrator interacts with the web UI
+- The API exposes REST endpoints and real-time communication through SignalR
+- The WinForms client listens for commands from the backend
+- Client actions are logged into SQL Server
+- The web interface can query and visualize the centralized event log
+
+This allows the system to combine:
+
+- remote client control
+- real-time messaging
+- centralized persistence
+- monitoring and audit visibility
+
+---
+
+## Components
+
+### EventControl.UI
+React-based administrative interface used to:
+
+- send remote commands
+- monitor client activity
+- review centralized logs
+- edit log comments where supported
+
+### EventControl.API
+ASP.NET Core backend responsible for:
+
+- exposing REST endpoints
+- hosting the SignalR hub
+- coordinating communication between components
+- persisting and retrieving event data from SQL Server
+
+### EventClient.App
+Windows Forms desktop application that:
+
+- receives remote commands
+- opens or closes forms depending on incoming instructions
+- records activity triggered manually or remotely
+- communicates back through the centralized system
+
+### SQL Server
+Database layer used for:
+
+- event persistence
+- traceability and auditing
+- stored procedure-driven event registration
+- centralized event history queries
+
+---
+
+## Key Features
+
+- Real-time communication between web UI, API, and desktop clients
+- Remote command execution through SignalR
+- Centralized event logging in SQL Server
+- Traceable event records with time, source, type, and machine context
+- Editable comments in the event log from the web interface
+- Modular architecture with independently runnable components
+- Distributed interaction between web, backend, and desktop application
+- Event visualization through a centralized dashboard
+
+---
+
+## Tech Stack
+
+### Frontend
+- React
+- Vite
+- JavaScript
+- SignalR Client
+
+### Backend
+- ASP.NET Core
+- Entity Framework Core
+- SignalR
+
+### Desktop Client
+- WinForms (.NET 8)
+- SignalR Client
+
+### Database
+- SQL Server
+- Stored procedures
+
+---
+
+## Typical Workflow
+
+A typical interaction in the system looks like this:
+
+1. The administrator opens the React dashboard
+2. A command is sent from the UI to the ASP.NET Core backend
+3. The backend forwards the instruction through SignalR
+4. A connected WinForms client receives the command
+5. The client performs the requested action
+6. The event is registered in SQL Server
+7. The web dashboard displays the recorded event in the centralized log
+
+This flow allows both operational control and event traceability in a single system.
+
+---
+
+## Requirements
+
+- .NET 8 SDK
+- Node.js 18+
+- npm
+- SQL Server
+- Visual Studio or a compatible .NET development environment
+
+---
+
+## Configuration
+
+Before running the system, make sure each component is configured correctly.
+
+### Backend configuration
+Update the API configuration with:
+
+- SQL Server connection string
+- SignalR-related settings if needed
+- local development URLs
+
+Typical file:
+```text
+appsettings.json
 ```
 
-- El administrador desde la UI web puede abrir/cerrar formularios en los clientes WinForms.
-- El backend transmite los comandos mediante SignalR y registra/consulta eventos en SQL Server.
-- Los clientes WinForms reciben los comandos y registran su actividad (manual o remota).
+### Frontend configuration
+Make sure the web UI points to the correct backend/API URL and SignalR hub URL.
+
+### Desktop client configuration
+Make sure the WinForms client points to the correct backend or hub endpoint.
+
+> Keep local URLs aligned across all components during development.
 
 ---
 
-## 📦 Componentes
+## How to Run
 
-| Componente         | Descripción |
-|--------------------|-------------|
-| **EventControl.UI** | React + Vite + SignalR client. Interfaz para enviar comandos y consultar bitácora. |
-| **EventControl.API** | ASP.NET Core, Entity Framework y SignalR. Expone endpoints REST y concentra mensajes en tiempo real. |
-| **EventClient.App** | Aplicación WinForms (.NET 8.0) que muestra formularios y registra eventos según comandos recibidos. |
-| **SQL Server** | Base de datos con procedimientos almacenados para registrar apertura y cierre de eventos. |
+### 1. Clone the repositories
 
----
-
-## 🚀 Funcionalidades principales
-
-- ✅ Control remoto de formularios cliente vía SignalR
-- ✅ Registro automático de eventos con hora, origen, tipo y equipo
-- ✅ Bitácora editable desde la interfaz web (campo comentario)
-- ✅ Comunicación en tiempo real entre React, API y cliente WinForms
-- ✅ Arquitectura modular: componentes independientes pero integrados
-
----
-
-## 🛠️ Tecnologías utilizadas
-
-- **Frontend**: React 19, Vite, JavaScript, SignalR Client
-- **Backend**: ASP.NET Core, Entity Framework Core, SignalR
-- **Cliente**: WinForms (.NET 8.0), SignalR Client
-- **Base de datos**: SQL Server
-
----
-
-## 🧪 Cómo ejecutar el proyecto
-
-### 1. Clonar los repositorios
 ```bash
-git clone https://github.com/tuusuario/EventControl.UI.git
-git clone https://github.com/tuusuario/EventControl.API.git
-git clone https://github.com/tuusuario/EventClient.App.git
+git clone https://github.com/your-username/EventControl.UI.git
+git clone https://github.com/your-username/EventControl.API.git
+git clone https://github.com/your-username/EventClient.App.git
 ```
 
-### 2. Ejecutar el backend
-- Configurar `appsettings.json` con la cadena de conexión a SQL Server.
-- Ejecutar `EventControl.API` desde Visual Studio o CLI.
+### 2. Run the backend
 
-### 3. Ejecutar el cliente WinForms
-- Abrir `EventClient.sln` y compilar.
-- Ejecutar `MainForm` como cliente receptor.
+- Open `EventControl.API`
+- Configure `appsettings.json`
+- Restore packages
+- Run the API from Visual Studio or CLI
 
-### 4. Ejecutar la UI web
+Example:
+
+```bash
+dotnet restore
+dotnet run
+```
+
+### 3. Run the desktop client
+
+- Open the WinForms solution
+- Build the project
+- Run the main client application
+
+### 4. Run the web UI
+
 ```bash
 cd EventControl.UI
 npm install
 npm run dev
 ```
 
-> Asegúrate de que las URLs coincidan con las del backend (`localhost:7290` por defecto).
+### 5. Verify connectivity
+
+Make sure:
+
+- the API is running
+- the SignalR hub is reachable
+- the client is connected
+- the web UI uses the correct backend URL
 
 ---
 
-## 📚 Casos de uso típicos
+## Common Use Cases
 
-- Un administrador desea abrir remotamente un formulario en una terminal específica.
-- Se requiere registrar automáticamente cuándo y cómo fue abierto/cerrado un cliente.
-- Consultar el historial de eventos, agregar comentarios y auditar actividad.
+- An administrator needs to remotely open a form on a specific client machine
+- The system must register when a client form was opened or closed
+- A team needs to audit client-side activity from a centralized web interface
+- Operators need a shared real-time view of distributed event activity
+- Comments must be added to log entries for operational follow-up
 
 ---
 
-🔒 **Nota**: Este proyecto fue realizado como parte de una prueba técnica. Su contenido es de carácter demostrativo y no está autorizado para su reutilización sin permiso.
-© 2025 Miguel Etzel García Delgado. Todos los derechos reservados
+## Notes
+
+- This project is best understood as a distributed systems sample that combines backend, desktop, and web communication.
+- SignalR is the core mechanism used for real-time interaction between components.
+- SQL Server provides the persistence layer for event traceability.
+- The solution is strongest as a portfolio project when all three components are presented together.
+- Before publishing the repository, remove unnecessary local folders such as `.vs`, `bin`, and `obj` if they are present.
